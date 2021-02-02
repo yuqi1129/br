@@ -938,6 +938,7 @@ func (l *LogClient) RestoreLogData(ctx context.Context, dom *domain.Domain) erro
 		return errors.Trace(err)
 	}
 	log.Info("get meta from storage", zap.Binary("data", data))
+	log.Info("meta info:", zap.Any("info", l.meta))
 
 	if l.startTS > l.meta.GlobalResolvedTS {
 		return errors.Annotatef(berrors.ErrRestoreRTsConstrain,
@@ -966,6 +967,7 @@ func (l *LogClient) RestoreLogData(ctx context.Context, dom *domain.Domain) erro
 	log.Debug("db level ddl executed")
 
 	// collect row change files
+	log.Info("heha")
 	rowChangesFiles, err := l.collectRowChangeFiles(ctx)
 	if err != nil {
 		return errors.Trace(err)
