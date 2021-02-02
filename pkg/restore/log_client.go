@@ -309,6 +309,8 @@ func (l *LogClient) collectRowChangeFiles(ctx context.Context) (map[int64][]stri
 	// then we will have two different table id with same tables.
 	// we should keep the latest table id(larger table id), and filter the old one.
 	nameIDMap := make(map[string]int64)
+	log.Info("l.meta.Names", zap.Any("files", l.meta.Names))
+
 	for tableID, name := range l.meta.Names {
 		if tid, ok := nameIDMap[name]; ok {
 			if tid < tableID {
@@ -318,6 +320,7 @@ func (l *LogClient) collectRowChangeFiles(ctx context.Context) (map[int64][]stri
 			nameIDMap[name] = tableID
 		}
 	}
+	log.Info("l.meta.Names", zap.Any("files", nameIDMap))
 	for name, tableID := range nameIDMap {
 		schema, table := ParseQuoteName(name)
 		if !l.tableFilter.MatchTable(schema, table) {
@@ -330,7 +333,7 @@ func (l *LogClient) collectRowChangeFiles(ctx context.Context) (map[int64][]stri
 		}
 		tableIDs = append(tableIDs, tableID)
 	}
-
+	log.Info("l.meta.Names", zap.Any("files", tableIDs))
 	for _, tID := range tableIDs {
 		tableID := tID
 		// FIXME update log meta logic here
@@ -354,7 +357,7 @@ func (l *LogClient) collectRowChangeFiles(ctx context.Context) (map[int64][]stri
 			return nil, errors.Trace(err)
 		}
 	}
-
+	log.Info("l.meta.Names", zap.Any("files", rowChangeFiles))
 	// sort file in order
 	for tID, files := range rowChangeFiles {
 		sortFiles := files
