@@ -264,13 +264,15 @@ func (importer *FileImporter) Import(
 						continue regionLoop
 					}
 				}
-				log.Error("download file failed",
-					logutil.File(file),
-					logutil.Region(info.Region),
-					logutil.Key("startKey", startKey),
-					logutil.Key("endKey", endKey),
-					logutil.ShortError(errDownload))
-				return errors.Trace(errDownload)
+
+				continue
+				// log.Error("download file failed",
+				//	logutil.File(file),
+				//	logutil.Region(info.Region),
+				//	logutil.Key("startKey", startKey),
+				//	logutil.Key("endKey", endKey),
+				//	logutil.ShortError(errDownload))
+				// return errors.Trace(errDownload)
 			}
 
 			ingestResp, errIngest := importer.ingestSST(ctx, downloadMeta, info)
